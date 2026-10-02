@@ -1,0 +1,762 @@
+%YAML 1.2
+---
+# Converted from go.tmLanguage.json. Keep scope names and pattern order aligned
+# with the source TextMate grammar when making changes.
+version: 2
+name: "Go"
+file_extensions:
+  - go
+scope: "source.go"
+contexts:
+  statements:
+    - include: package_name
+    - include: import
+    - include: syntax_errors
+    - include: group-functions
+    - include: group-types
+    - include: group-variables
+    - include: hover
+  group-functions:
+    - include: function_declaration
+    - include: functions_inline
+    - include: functions
+    - include: built_in_functions
+    - include: support_functions
+  group-types:
+    - include: other_struct_interface_expressions
+    - include: type_assertion_inline
+    - include: struct_variables_types
+    - include: interface_variables_types
+    - include: single_type
+    - include: multi_types
+    - include: struct_interface_declaration
+    - include: double_parentheses_types
+    - include: switch_types
+    - include: type-declarations
+  group-variables:
+    - include: const_assignment
+    - include: var_assignment
+    - include: variable_assignment
+    - include: label_loop_variables
+    - include: slice_index_variables
+    - include: property_variables
+    - include: switch_variables
+    - include: other_variables
+  type-declarations:
+    - include: language_constants
+    - include: comments
+    - include: map_types
+    - include: brackets
+    - include: delimiters
+    - include: keywords
+    - include: operators
+    - include: runes
+    - include: storage_types
+    - include: raw_string_literals
+    - include: string_literals
+    - include: numeric_literals
+    - include: terminators
+  type-declarations-without-brackets:
+    - include: language_constants
+    - include: comments
+    - include: map_types
+    - include: delimiters
+    - include: keywords
+    - include: operators
+    - include: runes
+    - include: storage_types
+    - include: raw_string_literals
+    - include: string_literals
+    - include: numeric_literals
+    - include: terminators
+  parameter-variable-types:
+    - match: "\\{"
+      scope: "punctuation.definition.begin.bracket.curly.go"
+    - match: "\\}"
+      scope: "punctuation.definition.end.bracket.curly.go"
+    - match: "([\\w\\.\\*]+)?(\\[)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "punctuation.definition.begin.bracket.square.go"
+      push: __parameter_variable_types_1
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __parameter_variable_types_2
+  language_constants:
+    - match: "\\b(?:(true|false)|(nil)|(iota))\\b"
+      captures:
+        "1": "constant.language.boolean.go"
+        "2": "constant.language.null.go"
+        "3": "constant.language.iota.go"
+  comments:
+    - match: "(\\/\\*)"
+      scope: "comment.block.go"
+      captures:
+        "1": "punctuation.definition.comment.go"
+      push: __comments_3
+    - match: "(\\/\\/)"
+      scope: "comment.line.double-slash.go"
+      captures:
+        "1": "punctuation.definition.comment.go"
+      push: __comments_4
+  map_types:
+    - include: type-declarations-without-brackets
+    - include: parameter-variable-types
+    - include: functions
+    - match: "\\["
+      scope: "punctuation.definition.begin.bracket.square.go"
+    - match: "\\]"
+      scope: "punctuation.definition.end.bracket.square.go"
+    - match: "\\{"
+      scope: "punctuation.definition.begin.bracket.curly.go"
+    - match: "\\}"
+      scope: "punctuation.definition.end.bracket.curly.go"
+    - match: "\\("
+      scope: "punctuation.definition.begin.bracket.round.go"
+    - match: "\\)"
+      scope: "punctuation.definition.end.bracket.round.go"
+    - match: "\\w+"
+      scope: "entity.name.type.go"
+  brackets:
+    - match: "\\{"
+      captures:
+        "0": "punctuation.definition.begin.bracket.curly.go"
+      push: __brackets_5
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __brackets_6
+    - match: "\\["
+      captures:
+        "0": "punctuation.definition.begin.bracket.square.go"
+      push: __brackets_7
+  delimiters:
+    - match: "\\,"
+      scope: "punctuation.other.comma.go"
+    - match: "\\.(?!\\.\\.)"
+      scope: "punctuation.other.period.go"
+    - match: ":(?!=)"
+      scope: "punctuation.other.colon.go"
+  keywords:
+    - match: "\\b(break|case|continue|default|defer|else|fallthrough|for|go|goto|if|range|return|select|switch)\\b"
+      scope: "keyword.control.go"
+    - match: "\\bchan\\b"
+      scope: "keyword.channel.go"
+    - match: "\\bconst\\b"
+      scope: "keyword.const.go"
+    - match: "\\bvar\\b"
+      scope: "keyword.var.go"
+    - match: "\\bfunc\\b"
+      scope: "keyword.function.go"
+    - match: "\\binterface\\b"
+      scope: "keyword.interface.go"
+    - match: "\\bmap\\b"
+      scope: "keyword.map.go"
+    - match: "\\bstruct\\b"
+      scope: "keyword.struct.go"
+    - match: "\\bimport\\b"
+      scope: "keyword.control.import.go"
+    - match: "\\btype\\b"
+      scope: "keyword.type.go"
+  operators:
+    - match: "(?<!\\w)(?:\\*|\\&)+(?:(?!\\d)(?=(?:[\\w\\[\\]])|(?:\\<\\-)))"
+      scope: "keyword.operator.address.go"
+    - match: "<\\-"
+      scope: "keyword.operator.channel.go"
+    - match: "\\-\\-"
+      scope: "keyword.operator.decrement.go"
+    - match: "\\+\\+"
+      scope: "keyword.operator.increment.go"
+    - match: "(==|!=|<=|>=|<(?!<)|>(?!>))"
+      scope: "keyword.operator.comparison.go"
+    - match: "(&&|\\|\\||!)"
+      scope: "keyword.operator.logical.go"
+    - match: "(=|\\+=|\\-=|\\|=|\\^=|\\*=|/=|:=|%=|<<=|>>=|&\\^=|&=)"
+      scope: "keyword.operator.assignment.go"
+    - match: "(\\+|\\-|\\*|/|%)"
+      scope: "keyword.operator.arithmetic.go"
+    - match: "(&(?!\\^)|\\||\\^|&\\^|<<|>>|\\~)"
+      scope: "keyword.operator.arithmetic.bitwise.go"
+    - match: "\\.\\.\\."
+      scope: "keyword.operator.ellipsis.go"
+  runes:
+    - match: "'"
+      scope: "string.quoted.rune.go"
+      captures:
+        "0": "punctuation.definition.string.begin.go"
+      push: __runes_8
+  storage_types:
+    - match: "\\bbool\\b"
+      scope: "storage.type.boolean.go"
+    - match: "\\bbyte\\b"
+      scope: "storage.type.byte.go"
+    - match: "\\berror\\b"
+      scope: "storage.type.error.go"
+    - match: "\\b(complex(64|128)|float(32|64)|u?int(8|16|32|64)?)\\b"
+      scope: "storage.type.numeric.go"
+    - match: "\\brune\\b"
+      scope: "storage.type.rune.go"
+    - match: "\\bstring\\b"
+      scope: "storage.type.string.go"
+    - match: "\\buintptr\\b"
+      scope: "storage.type.uintptr.go"
+    - match: "\\bany\\b"
+      scope: "entity.name.type.any.go"
+    - match: "\\bcomparable\\b"
+      scope: "entity.name.type.comparable.go"
+  raw_string_literals:
+    - include: string_placeholder
+  string_literals:
+    - match: "\""
+      scope: "string.quoted.double.go"
+      captures:
+        "0": "punctuation.definition.string.begin.go"
+      push: __string_literals_9
+  string_escaped_char:
+    - match: "\\\\([0-7]{3}|[abfnrtv\\\\'\"]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})"
+      scope: "constant.character.escape.go"
+    - match: "\\\\[^0-7xuUabfnrtv\\'\"]"
+      scope: "invalid.illegal.unknown-escape.go"
+  string_placeholder:
+    - match: "%(\\[\\d+\\])?([\\+#\\-0\\x20]{,2}((\\d+|\\*)?(\\.?(\\d+|\\*|(\\[\\d+\\])\\*?)?(\\[\\d+\\])?)?))?[vT%tbcdoqxXUbeEfFgGspw]"
+      scope: "constant.other.placeholder.go"
+  numeric_literals:
+    - match: "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.])|(?<=[eEpP])[+-])*"
+  terminators:
+    - match: ";"
+      scope: "punctuation.terminator.go"
+  package_name:
+    - match: "\\b(package)\\s+"
+      captures:
+        "1": "keyword.package.go"
+      push: __package_name_10
+  import:
+    - match: "\\b(import)\\s+"
+      captures:
+        "1": "keyword.control.import.go"
+      push: __import_11
+  imports:
+    - match: "(\\s*[\\w\\.]+)?\\s*((\")([^\"]*)(\"))"
+      captures:
+        "1": "variable.other.import.go"
+        "2": "string.quoted.double.go"
+        "3": "punctuation.definition.string.begin.go"
+        "4": "entity.name.import.go"
+        "5": "punctuation.definition.string.end.go"
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.imports.begin.bracket.round.go"
+      push: __imports_12
+    - include: main
+  function_declaration:
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __function_declaration_13
+    - match: "([\\w\\.\\*]+)?(\\[)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "punctuation.definition.begin.bracket.square.go"
+      push: __function_declaration_14
+    - match: "(?:(?<=\\))(?:\\s*)((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?[\\w\\*\\.\\[\\]\\<\\>\\-]+(?:\\s*)(?:\\/(?:\\/|\\*).*)?)$)"
+      captures:
+        "1": "entity.name.type.go"
+    - include: main
+  function_param_types:
+    - include: struct_variables_types
+    - include: interface_variables_types
+    - include: type-declarations-without-brackets
+    - match: "((?:(?:\\b\\w+\\,\\s*)+)?\\b\\w+)\\s+(?=(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\[\\]\\*]+)?\\b(?:struct|interface)\\b\\s*\\{)"
+      captures:
+        "1": "variable.parameter.go"
+    - match: "(?:(?:(?<=\\()|^\\s*)((?:(?:\\b\\w+\\,\\s*)+)(?:/(?:/|\\*).*)?)$)"
+      captures:
+        "1": "variable.parameter.go"
+    - match: "(?:((?:(?:\\b\\w+\\,\\s*)+)?\\b\\w+)(?:\\s+)((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:(?:(?:[\\w\\[\\]\\.\\*]+)?(?:(?:\\bfunc\\b\\((?:[^\\)]+)?\\))(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:\\s*))+(?:(?:(?:[\\w\\*\\.\\[\\]]+)|(?:\\((?:[^\\)]+)?\\))))?)|(?:(?:[\\[\\]\\*]+)?[\\w\\*\\.]+(?:\\[(?:[^\\]]+)\\])?(?:[\\w\\.\\*]+)?)+)))"
+      captures:
+        "1": "variable.parameter.go"
+        "2": "entity.name.type.go"
+    - match: "([\\w\\.\\*]+)?(\\[)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "punctuation.definition.begin.bracket.square.go"
+      push: __function_param_types_15
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __function_param_types_16
+    - match: "([\\w\\.]+)"
+      captures:
+        "1": "entity.name.type.go"
+    - include: main
+  generic_param_types:
+    - include: struct_variables_types
+    - include: interface_variables_types
+    - include: type-declarations-without-brackets
+    - match: "((?:(?:\\b\\w+\\,\\s*)+)?\\b\\w+)\\s+(?=(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\[\\]\\*]+)?\\b(?:struct|interface)\\b\\s*\\{)"
+      captures:
+        "1": "variable.parameter.go"
+    - match: "(?:(?:(?<=\\()|^\\s*)((?:(?:\\b\\w+\\,\\s*)+)(?:/(?:/|\\*).*)?)$)"
+      captures:
+        "1": "variable.parameter.go"
+    - match: "(?:((?:(?:\\b\\w+\\,\\s*)+)?\\b\\w+)(?:\\s+)((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:(?:(?:[\\w\\[\\]\\.\\*]+)?(?:(?:\\bfunc\\b\\((?:[^\\)]+)?\\))(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:\\s*))+(?:(?:(?:[\\w\\*\\.]+)|(?:\\((?:[^\\)]+)?\\))))?)|(?:(?:(?:[\\w\\*\\.\\~]+)|(?:\\[(?:(?:[\\w\\.\\*]+)?(?:\\[(?:[^\\]]+)?\\])?(?:\\,\\s+)?)+\\]))(?:[\\w\\.\\*]+)?)+)))"
+      captures:
+        "1": "variable.parameter.go"
+        "2": "entity.name.type.go"
+        "3": "entity.name.type.go"
+    - match: "([\\w\\.\\*]+)?(\\[)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "punctuation.definition.begin.bracket.square.go"
+      push: __generic_param_types_17
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __generic_param_types_18
+    - match: "\\b([\\w\\.]+)"
+      captures:
+        "1": "entity.name.type.go"
+    - include: main
+  functions:
+    - include: parameter-variable-types
+  functions_inline:
+    - match: "(?:(\\bfunc\\b)((?:\\((?:[^/]*?)\\))(?:\\s+)(?:\\((?:[^/]*?)\\)))(?:\\s+)(?=\\{))"
+      captures:
+        "1": "keyword.function.go"
+        "2": "entity.name.type.go"
+  support_functions:
+    - match: "(?:(?:((?<=\\.)\\b\\w+)|(\\b\\w+))(?<brackets>\\[(?:[^\\[\\]]|\\g<brackets>)*\\])?(?=\\())"
+      captures:
+        "1": "entity.name.function.support.go"
+        "2": "entity.name.function.support.go"
+        "3": "entity.name.type.go"
+  other_struct_interface_expressions:
+    - include: after_control_variables
+    - match: "\\b(?!struct\\b|interface\\b)([\\w\\.]+)(?<brackets>\\[(?:[^\\[\\]]|\\g<brackets>)*\\])?(?=\\{)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "entity.name.type.go"
+  type_assertion_inline:
+    - match: "(?:(?<=\\.\\()(?:(\\btype\\b)|((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\[\\]\\*]+)?(?:[\\w\\.]+)(?:\\[(?:(?:[\\w\\.\\*\\[\\]\\{\\}]+)(?:(?:\\,\\s*(?:[\\w\\.\\*\\[\\]\\{\\}]+))*))?\\])?))(?=\\)))"
+      captures:
+        "1": "keyword.type.go"
+        "2": "entity.name.type.go"
+  struct_variables_types:
+    - include: struct_variables_types_fields
+    - include: main
+  struct_variables_types_fields:
+    - include: struct_variable_types_fields_multi
+    - match: "(?:(?<=\\{)\\s*((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\w\\.\\*\\[\\]]+))\\s*(?=\\}))"
+      captures:
+        "1": "entity.name.type.go"
+    - match: "(?:(?<=\\{)\\s*((?:(?:\\w+\\,\\s*)+)?(?:\\w+\\s+))((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\w\\.\\*\\[\\]]+))\\s*(?=\\}))"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "entity.name.type.go"
+    - match: "(?:(?<=\\{)([^/\\`\"]*[^\\s/\\`\"])\\s*(?=\\}))"
+    - match: "(?:((?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:[\\w\\.\\*]+)\\s*)(?:(?=\\`|\\/|\")|$))"
+      captures:
+        "1": "entity.name.type.go"
+    - match: "(\\b\\w+(?:\\s*\\,\\s*\\b\\w+)*)\\s*([^\\`\"\\/]+)"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "entity.name.type.go"
+  struct_variable_types_fields_multi:
+    - match: "(?:((?:\\b\\w+(?:\\,\\s*\\b\\w+)*)(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:\\s*)(?:[\\[\\]\\*]+)?)(\\bstruct\\b)(?:\\s*)(\\{))"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "keyword.struct.go"
+        "3": "punctuation.definition.begin.bracket.curly.go"
+      push: __struct_variable_types_fields_multi_19
+    - match: "(?:((?:\\b\\w+(?:\\,\\s*\\b\\w+)*)(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:\\s*)(?:[\\[\\]\\*]+)?)(\\binterface\\b)(?:\\s*)(\\{))"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "keyword.interface.go"
+        "3": "punctuation.definition.begin.bracket.curly.go"
+      push: __struct_variable_types_fields_multi_20
+    - match: "(?:((?:\\b\\w+(?:\\,\\s*\\b\\w+)*)(?:(?:\\s*(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:\\s*)(?:[\\[\\]\\*]+)?)(\\bfunc\\b)(?:\\s*)(\\())"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "keyword.function.go"
+        "3": "punctuation.definition.begin.bracket.round.go"
+      push: __struct_variable_types_fields_multi_21
+    - include: parameter-variable-types
+  interface_variables_types:
+    - include: interface_variables_types_field
+    - include: main
+  interface_variables_types_field:
+    - include: support_functions
+    - include: type-declarations-without-brackets
+    - match: "([\\w\\.\\*]+)?(\\[)"
+      captures:
+        "1": "entity.name.type.go"
+        "2": "punctuation.definition.begin.bracket.square.go"
+      push: __interface_variables_types_field_22
+    - match: "\\("
+      captures:
+        "0": "punctuation.definition.begin.bracket.round.go"
+      push: __interface_variables_types_field_23
+    - match: "([\\w\\.]+)"
+      captures:
+        "1": "entity.name.type.go"
+  single_type:
+    - match: "(?:(?:^\\s*)(\\btype\\b)(?:\\s*)([\\w\\.\\*]+)(?:\\s+)(?!(?:\\=\\s*)?(?:[\\[\\]\\*]+)?\\b(?:struct|interface)\\b)([\\s\\S]+))"
+      captures:
+        "1": "keyword.type.go"
+        "2": "entity.name.type.go"
+        "3": "entity.name.type.go"
+    - match: "(?:(?:^|\\s+)(\\btype\\b)(?:\\s*)([\\w\\.\\*]+)(?=\\[))"
+      captures:
+        "1": "keyword.type.go"
+        "2": "entity.name.type.go"
+      push: __single_type_24
+  multi_types:
+    - include: struct_variables_types
+    - include: interface_variables_types
+    - include: type-declarations-without-brackets
+    - include: parameter-variable-types
+    - match: "\\w+"
+      scope: "entity.name.type.go"
+  after_control_variables:
+    - match: "(?:(?<=\\brange\\b|\\;|\\bif\\b|\\bfor\\b|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\w(?:\\+|/|\\-|\\*|\\%)|\\w(?:\\+|/|\\-|\\*|\\%)\\=|\\|\\||\\&\\&)(?:\\s*)((?![\\[\\]]+)[[:alnum:]\\-\\_\\!\\.\\[\\]\\<\\>\\=\\*/\\+\\%\\:]+)(?:\\s*)(?=\\{))"
+      captures:
+        "1": "variable.other.go"
+  syntax_errors:
+    - match: "\\[\\](\\s+)"
+      captures:
+        "1": "invalid.illegal.slice.go"
+    - match: "\\b0[0-7]*[89]\\d*\\b"
+      scope: "invalid.illegal.numeric.go"
+  built_in_functions:
+    - match: "\\b(append|cap|close|complex|copy|delete|imag|len|panic|print|println|real|recover|min|max|clear)\\b(?=\\()"
+      scope: "entity.name.function.support.builtin.go"
+    - match: "(\\bnew\\b)(\\()"
+      captures:
+        "1": "entity.name.function.support.builtin.go"
+        "2": "punctuation.definition.begin.bracket.round.go"
+      push: __built_in_functions_25
+    - match: "(?:(\\bmake\\b)(?:(\\()((?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+(?:\\([^\\)]+\\))?)?(?:[\\[\\]\\*]+)?(?:(?!\\bmap\\b)(?:[\\w\\.]+))?(\\[(?:(?:[\\S]+)(?:(?:\\,\\s*(?:[\\S]+))*))?\\])?(?:\\,)?)?))"
+      captures:
+        "1": "entity.name.function.support.builtin.go"
+        "2": "punctuation.definition.begin.bracket.round.go"
+        "3": "entity.name.type.go"
+      push: __built_in_functions_26
+  struct_interface_declaration:
+    - match: "(?:(?:^\\s*)(\\btype\\b)(?:\\s*)([\\w\\.]+))"
+      captures:
+        "1": "keyword.type.go"
+        "2": "entity.name.type.go"
+  switch_types:
+    - match: "(?:^\\s*(\\bcase\\b))(?:\\s+)([\\w\\.\\,\\*\\=\\<\\>\\!\\s]+)(:)(\\s*/(?:/|\\*)\\s*.*)?$"
+      captures:
+        "1": "keyword.control.go"
+        "2": "entity.name.type.go"
+        "3": "punctuation.other.colon.go"
+    - match: "\\bcase\\b"
+      captures:
+        "0": "keyword.control.go"
+      push: __switch_types_27
+    - include: main
+  switch_variables:
+    - match: "(?:(?:^\\s*(\\bcase\\b))(?:\\s+)([\\s\\S]+(?:\\:)\\s*(?:/(?:/|\\*).*)?)$)"
+      captures:
+        "1": "keyword.control.go"
+        "2": "variable.other.go"
+    - match: "(?<=\\bswitch\\b)(?:\\s*)((?:[\\w\\.]+(?:\\s*(?:[\\:\\=\\!\\,\\+/\\-\\%\\<\\>\\|\\&]+)\\s*[\\w\\.]+)*\\s*(?:[\\:\\=\\!\\,\\+/\\-\\%\\<\\>\\|\\&]+))?(?:\\s*(?:[\\w\\.\\*\\(\\)\\[\\]\\+/\\-\\%\\<\\>\\|\\&]+)?\\s*(?:\\;\\s*(?:[\\w\\.\\*\\(\\)\\[\\]\\+/\\-\\%\\<\\>\\|\\&]+)\\s*)?))(\\{)"
+      captures:
+        "1": "variable.other.go"
+        "2": "punctuation.definition.begin.bracket.curly.go"
+      push: __switch_variables_28
+  var_assignment:
+    - match: "(?:(?<=\\bvar\\b)(?:\\s*)(\\b[\\w\\.]+(?:\\,\\s*[\\w\\.]+)*)(?:\\s*)((?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+(?:\\([^\\)]+\\))?)?(?!(?:[\\[\\]\\*]+)?\\b(?:struct|func|map)\\b)(?:[\\w\\.\\[\\]\\*]+(?:\\,\\s*[\\w\\.\\[\\]\\*]+)*)?(?:\\s*)(?:\\=)?)?)"
+      captures:
+        "1": "variable.other.assignment.go"
+        "2": "entity.name.type.go"
+    - match: "(?:(?<=\\bvar\\b)(?:\\s*)(\\())"
+      captures:
+        "1": "punctuation.definition.begin.bracket.round.go"
+      push: __var_assignment_29
+  const_assignment:
+    - match: "(?:(?<=\\bconst\\b)(?:\\s*)(\\b[\\w\\.]+(?:\\,\\s*[\\w\\.]+)*)(?:\\s*)((?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+(?:\\([^\\)]+\\))?)?(?!(?:[\\[\\]\\*]+)?\\b(?:struct|func|map)\\b)(?:[\\w\\.\\[\\]\\*]+(?:\\,\\s*[\\w\\.\\[\\]\\*]+)*)?(?:\\s*)(?:\\=)?)?)"
+      captures:
+        "1": "variable.other.constant.go"
+        "2": "entity.name.type.go"
+    - match: "(?:(?<=\\bconst\\b)(?:\\s*)(\\())"
+      captures:
+        "1": "punctuation.definition.begin.bracket.round.go"
+      push: __const_assignment_30
+  variable_assignment:
+    - match: "\\b\\w+(?:\\,\\s*\\w+)*(?=\\s*:=)"
+      captures:
+        "0": "variable.other.assignment.go"
+    - match: "\\b[\\w\\.\\*]+(?:\\,\\s*[\\w\\.\\*]+)*(?=\\s*=(?!=))"
+      captures:
+        "0": "variable.other.assignment.go"
+  generic_types:
+    - match: "(?:([\\w\\.\\*]+)(\\[(?:[^\\]]+)?\\]))"
+      captures:
+        "1": "entity.name.type.go"
+  slice_index_variables:
+    - match: "(?<=\\w\\[)((?:(?:\\b[\\w\\.\\*\\+/\\-\\%\\<\\>\\|\\&]+\\:)|(?:\\:\\b[\\w\\.\\*\\+/\\-\\%\\<\\>\\|\\&]+))(?:\\b[\\w\\.\\*\\+/\\-\\%\\<\\>\\|\\&]+)?(?:\\:\\b[\\w\\.\\*\\+/\\-\\%\\<\\>\\|\\&]+)?)(?=\\])"
+      captures:
+        "1": "variable.other.go"
+  property_variables:
+    - match: "((?:\\b[\\w\\.]+)(?:\\:(?!\\=)))"
+      captures:
+        "1": "variable.other.property.go"
+  label_loop_variables:
+    - match: "((?:^\\s*\\w+:\\s*$)|(?:^\\s*(?:\\bbreak\\b|\\bgoto\\b|\\bcontinue\\b)\\s+\\w+(?:\\s*/(?:/|\\*)\\s*.*)?$))"
+      captures:
+        "1": "variable.other.label.go"
+  double_parentheses_types:
+    - match: "(?:(?<!\\w)(\\((?:[\\[\\]\\*]+)?(?:[\\w\\.]+)(?:\\[(?:(?:[\\w\\.\\*\\[\\]\\{\\}]+)(?:(?:\\,\\s*(?:[\\w\\.\\*\\[\\]\\{\\}]+))*))?\\])?\\))(?=\\())"
+      captures:
+        "1": "entity.name.type.go"
+  hover:
+    - match: "(?:(?<=^\\bfield\\b)\\s+([\\w\\*\\.]+)\\s+([\\s\\S]+))"
+      captures:
+        "1": "variable.other.property.go"
+        "2": "entity.name.type.go"
+    - match: "(?:(?<=^\\breturns\\b)\\s+([\\s\\S]+))"
+      captures:
+        "1": "entity.name.type.go"
+  other_variables:
+    - match: "\\w+"
+      scope: "variable.other.go"
+  main:
+    - include: statements
+  __parameter_variable_types_1:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: generic_param_types
+  __parameter_variable_types_2:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+  __comments_3:
+    - meta_scope: "comment.block.go"
+    - match: "(\\*\\/)"
+      captures:
+        "1": "punctuation.definition.comment.go"
+      pop: true
+  __comments_4:
+    - meta_scope: "comment.line.double-slash.go"
+    - match: "(?:\\n|$)"
+      pop: true
+  __brackets_5:
+    - match: "\\}"
+      captures:
+        "0": "punctuation.definition.end.bracket.curly.go"
+      pop: true
+    - include: main
+  __brackets_6:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: main
+  __brackets_7:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: main
+  __runes_8:
+    - meta_scope: "string.quoted.rune.go"
+    - match: "'"
+      captures:
+        "0": "punctuation.definition.string.end.go"
+      pop: true
+    - match: "\\G(\\\\([0-7]{3}|[abfnrtv\\\\'\"]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})|.)(?=')"
+      scope: "constant.other.rune.go"
+    - match: "[^']+"
+      scope: "invalid.illegal.unknown-rune.go"
+  __string_literals_9:
+    - meta_scope: "string.quoted.double.go"
+    - match: "\""
+      captures:
+        "0": "punctuation.definition.string.end.go"
+      pop: true
+    - include: string_escaped_char
+    - include: string_placeholder
+  __package_name_10:
+    - match: "(?!\\G)"
+      pop: true
+    - match: "\\d\\w*"
+      scope: "invalid.illegal.identifier.go"
+    - match: "\\w+"
+      scope: "entity.name.type.package.go"
+  __import_11:
+    - match: "(?!\\G)"
+      pop: true
+    - include: imports
+  __imports_12:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.imports.end.bracket.round.go"
+      pop: true
+    - include: comments
+    - include: imports
+  __function_declaration_13:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+  __function_declaration_14:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: generic_param_types
+  __function_param_types_15:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: generic_param_types
+  __function_param_types_16:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+  __generic_param_types_17:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: generic_param_types
+  __generic_param_types_18:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+  __struct_variable_types_fields_multi_19:
+    - match: "\\}"
+      captures:
+        "0": "punctuation.definition.end.bracket.curly.go"
+      pop: true
+    - include: struct_variables_types_fields
+    - include: main
+  __struct_variable_types_fields_multi_20:
+    - match: "\\}"
+      captures:
+        "0": "punctuation.definition.end.bracket.curly.go"
+      pop: true
+    - include: interface_variables_types_field
+    - include: main
+  __struct_variable_types_fields_multi_21:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+    - include: main
+  __interface_variables_types_field_22:
+    - match: "\\]"
+      captures:
+        "0": "punctuation.definition.end.bracket.square.go"
+      pop: true
+    - include: generic_param_types
+  __interface_variables_types_field_23:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: function_param_types
+  __single_type_24:
+    - match: "(?:(?<=\\])((?:\\s+)(?:\\=\\s*)?(?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+)?(?:(?!(?:[\\[\\]\\*]+)?(?:\\bstruct\\b|\\binterface\\b|\\bfunc\\b))[\\w\\.\\-\\*\\[\\]]+(?:\\,\\s*[\\w\\.\\[\\]\\*]+)*))?)"
+      captures:
+        "1": "entity.name.type.go"
+      pop: true
+    - include: struct_variables_types
+    - include: type-declarations-without-brackets
+    - include: parameter-variable-types
+    - match: "\\["
+      scope: "punctuation.definition.begin.bracket.square.go"
+    - match: "\\]"
+      scope: "punctuation.definition.end.bracket.square.go"
+    - match: "\\{"
+      scope: "punctuation.definition.begin.bracket.curly.go"
+    - match: "\\}"
+      scope: "punctuation.definition.end.bracket.curly.go"
+    - match: "\\("
+      scope: "punctuation.definition.begin.bracket.round.go"
+    - match: "\\)"
+      scope: "punctuation.definition.end.bracket.round.go"
+    - match: "\\w+"
+      scope: "entity.name.type.go"
+  __built_in_functions_25:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: functions
+    - include: struct_variables_types
+    - include: support_functions
+    - include: type-declarations
+    - include: generic_types
+    - match: "\\w+"
+      scope: "entity.name.type.go"
+    - include: main
+  __built_in_functions_26:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - include: main
+  __switch_types_27:
+    - match: "\\:"
+      captures:
+        "0": "punctuation.other.colon.go"
+      pop: true
+    - include: type-declarations
+    - match: "\\w+"
+      scope: "entity.name.type.go"
+  __switch_variables_28:
+    - match: "\\}"
+      captures:
+        "0": "punctuation.definition.end.bracket.curly.go"
+      pop: true
+    - match: "\\bcase\\b"
+      captures:
+        "0": "keyword.control.go"
+      push: ____switch_variables_28_31
+    - include: main
+  __var_assignment_29:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - match: "(?:(?:^\\s*)(\\b[\\w\\.]+(?:\\,\\s*[\\w\\.]+)*)(?:\\s*)((?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+(?:\\([^\\)]+\\))?)?(?!(?:[\\[\\]\\*]+)?\\b(?:struct|func|map)\\b)(?:[\\w\\.\\[\\]\\*]+(?:\\,\\s*[\\w\\.\\[\\]\\*]+)*)?(?:\\s*)(?:\\=)?)?)"
+      captures:
+        "1": "variable.other.assignment.go"
+        "2": "entity.name.type.go"
+    - include: main
+  __const_assignment_30:
+    - match: "\\)"
+      captures:
+        "0": "punctuation.definition.end.bracket.round.go"
+      pop: true
+    - match: "(?:(?:^\\s*)(\\b[\\w\\.]+(?:\\,\\s*[\\w\\.]+)*)(?:\\s*)((?:(?:(?:[\\*\\[\\]]+)?(?:\\<\\-\\s*)?\\bchan\\b(?:\\s*\\<\\-)?\\s*)+(?:\\([^\\)]+\\))?)?(?!(?:[\\[\\]\\*]+)?\\b(?:struct|func|map)\\b)(?:[\\w\\.\\[\\]\\*]+(?:\\,\\s*[\\w\\.\\[\\]\\*]+)*)?(?:\\s*)(?:\\=)?)?)"
+      captures:
+        "1": "variable.other.constant.go"
+        "2": "entity.name.type.go"
+    - include: main
+  ____switch_variables_28_31:
+    - match: "\\:"
+      captures:
+        "0": "punctuation.other.colon.go"
+      pop: true
+    - include: support_functions
+    - include: type-declarations
+    - include: variable_assignment
+    - match: "\\w+"
+      scope: "variable.other.go"
